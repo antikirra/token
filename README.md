@@ -1,4 +1,6 @@
 # [DRAFT] Abstract Token
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/antikirra/token/php)
+![Packagist Version](https://img.shields.io/packagist/v/antikirra/token)
 
 ## Install
 
