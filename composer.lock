@@ -1,0 +1,63 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "d2026e05946b9f069271fe7162201e1b",
+    "packages": [
+        {
+            "name": "antikirra/base64url",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antikirra/base64url.git",
+                "reference": "39a5d946e4a5fbdfdbc11085a0cd18368fb6094a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antikirra/base64url/zipball/39a5d946e4a5fbdfdbc11085a0cd18368fb6094a",
+                "reference": "39a5d946e4a5fbdfdbc11085a0cd18368fb6094a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "base64url.php"
+                ],
+                "psr-4": {
+                    "Antikirra\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kirill Tkachenko",
+                    "email": "antikirra@gmail.com"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/antikirra/base64url/issues",
+                "source": "https://github.com/antikirra/base64url/tree/2.0.0"
+            },
+            "time": "2024-01-31T09:18:46+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^8.1"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}
