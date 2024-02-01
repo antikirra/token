@@ -73,77 +73,77 @@ abstract class AbstractToken
         $data = unpack('vtype/Pidentity/VexpiredAt/Vnonce/a*sign', base64url_decode($raw));
 
         if (false === $data) {
-            throw new RuntimeException();
+            throw new RuntimeException('false === $data');
         }
 
         if (!is_array($data)) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_array($data)');
         }
 
         if (!isset($data['type'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!isset($data[\'type\'])');
         }
 
         if (!is_int($data['type'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_int($data[\'type\'])');
         }
 
         if ($data['type'] < 0 || $data['type'] > 255) {
-            throw new RuntimeException('>' . $data['type'] . "<");
+            throw new RuntimeException('$data[\'type\'] < 0 || $data[\'type\'] > 255');
         }
 
         if (!isset($data['identity'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!isset($data[\'identity\'])');
         }
 
         if (!is_int($data['identity']) && !is_double($data['identity'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_int($data[\'identity\']) && !is_double($data[\'identity\'])');
         }
 
         if ($data['identity'] < 0 || $data['identity'] > 18446744073709551615) {
-            throw new RuntimeException();
+            throw new RuntimeException('$data[\'identity\'] < 0 || $data[\'identity\'] > 18446744073709551615');
         }
 
         if (!isset($data['expiredAt'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!isset($data[\'expiredAt\'])');
         }
 
         if (!is_int($data['expiredAt'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_int($data[\'expiredAt\'])');
         }
 
         if ($data['expiredAt'] < 0 || $data['expiredAt'] > 4294967295) {
-            throw new RuntimeException();
+            throw new RuntimeException('$data[\'expiredAt\'] < 0 || $data[\'expiredAt\'] > 4294967295');
         }
 
         if (!isset($data['nonce'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!isset($data[\'nonce\'])');
         }
 
         if (!is_int($data['nonce'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_int($data[\'nonce\'])');
         }
 
         if ($data['nonce'] < 268435456 || $data['nonce'] > 4294967295) {
-            throw new RuntimeException();
+            throw new RuntimeException('$data[\'nonce\'] < 268435456 || $data[\'nonce\'] > 4294967295');
         }
 
         if (!isset($data['sign'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!isset($data[\'sign\'])');
         }
 
         if (!is_string($data['sign'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!is_string($data[\'sign\'])');
         }
 
         if (mb_strlen($data['sign'], '8bit') !== 16) {
-            throw new RuntimeException();
+            throw new RuntimeException('mb_strlen($data[\'sign\'], \'8bit\') !== 16');
         }
 
         $sign = self::sign($data['type'], $data['identity'], $data['expiredAt'], $data['nonce']);
 
         if (!hash_equals($sign, $data['sign'])) {
-            throw new RuntimeException();
+            throw new RuntimeException('!hash_equals($sign, $data[\'sign\'])');
         }
 
         $expiredAt = DateTimeImmutable::createFromFormat('U', (string)$data['expiredAt']);
