@@ -1,4 +1,5 @@
 # [DRAFT] Abstract Token
+
 ![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/antikirra/token/php)
 ![Packagist Version](https://img.shields.io/packagist/v/antikirra/token)
 
@@ -21,12 +22,14 @@ require __DIR__ . '/vendor/autoload.php';
 
 class MySecretToken extends AbstractToken
 {
-    protected static function definedType(): int
-    {
-        // token type in the range from 1 to 255
-        return 1;
-    }
+    // if necessary, you can override the token type
+    // protected static function definedType(): int
+    // {
+    //     // token type in the range from 1 to 255
+    //     return 1;
+    // }
 
+    // salt definition is a prerequisite for declaring a child class
     protected static function definedSalt(): string
     {
         // random string of arbitrary length

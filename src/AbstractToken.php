@@ -9,7 +9,12 @@ use RuntimeException;
 
 abstract class AbstractToken
 {
-    abstract protected static function definedType(): int;
+    private const DEFAULT_TYPE = 1;
+
+    protected static function definedType(): int
+    {
+        return self::DEFAULT_TYPE;
+    }
 
     abstract protected static function definedSalt(): string;
 
