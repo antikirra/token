@@ -20,7 +20,7 @@ abstract class AbstractToken
 
     final public function __construct(
         protected readonly int               $type,
-        public readonly int|float            $userId,
+        protected readonly int|float         $identity,
         protected readonly DateTimeImmutable $expiredAt,
         protected readonly int               $nonce,
         protected readonly string            $signature
@@ -38,29 +38,39 @@ abstract class AbstractToken
         return $this->expiredAt->getTimestamp() < time();
     }
 
-    final public static function create(int $userId, DateTimeImmutable $expiredAt, ?int $type = null): static
+    final public function getIdentity(): int|float
+    {
+        return $this->identity;
+    }
+
+    final public function getExpiredAt(): DateTimeImmutable
+    {
+        return $this->expiredAt;
+    }
+
+    final public static function create(int $identity, DateTimeImmutable $expiredAt, ?int $type = null): static
     {
         $type ??= static::definedType();
         $nonce = random_int(268435456, 4294967295);
-        $sign = self::sign($type, $userId, $expiredAt->getTimestamp(), $nonce);
-        return new static($type, $userId, $expiredAt, $nonce, $sign);
+        $sign = self::sign($type, $identity, $expiredAt->getTimestamp(), $nonce);
+        return new static($type, $identity, $expiredAt, $nonce, $sign);
     }
 
-    private static function sign(int $type, int $userId, int $expiredAt, int $nonce): string
+    private static function sign(int $type, int $identity, int $expiredAt, int $nonce): string
     {
-        return hash('xxh128', static::definedSalt() . ">{$nonce}%{$expiredAt}#{$userId}%{$type}<", true);
+        return hash('xxh128', static::definedSalt() . ">{$nonce}%{$expiredAt}#{$identity}%{$type}<", true);
     }
 
     final public function encode(): string
     {
         $expiredAt = $this->expiredAt->getTimestamp();
-        $packed = pack('vPVVa*', $this->type, $this->userId, $expiredAt, $this->nonce, $this->signature);
+        $packed = pack('vPVVa*', $this->type, $this->identity, $expiredAt, $this->nonce, $this->signature);
         return base64url_encode($packed);
     }
 
     final public static function decode(string $raw): static
     {
-        $data = unpack('vtype/PuserId/VexpiredAt/Vnonce/a*sign', base64url_decode($raw));
+        $data = unpack('vtype/Pidentity/VexpiredAt/Vnonce/a*sign', base64url_decode($raw));
 
         if (false === $data) {
             throw new RuntimeException();
@@ -82,15 +92,15 @@ abstract class AbstractToken
             throw new RuntimeException('>' . $data['type'] . "<");
         }
 
-        if (!isset($data['userId'])) {
+        if (!isset($data['identity'])) {
             throw new RuntimeException();
         }
 
-        if (!is_int($data['userId']) && !is_double($data['userId'])) {
+        if (!is_int($data['identity']) && !is_double($data['identity'])) {
             throw new RuntimeException();
         }
 
-        if ($data['userId'] < 0 || $data['userId'] > 18446744073709551615) {
+        if ($data['identity'] < 0 || $data['identity'] > 18446744073709551615) {
             throw new RuntimeException();
         }
 
@@ -130,7 +140,7 @@ abstract class AbstractToken
             throw new RuntimeException();
         }
 
-        $sign = self::sign($data['type'], $data['userId'], $data['expiredAt'], $data['nonce']);
+        $sign = self::sign($data['type'], $data['identity'], $data['expiredAt'], $data['nonce']);
 
         if (!hash_equals($sign, $data['sign'])) {
             throw new RuntimeException();
@@ -138,7 +148,7 @@ abstract class AbstractToken
 
         $expiredAt = DateTimeImmutable::createFromFormat('U', (string)$data['expiredAt']);
 
-        return new static($data['type'], $data['userId'], $expiredAt, $data['nonce'], $data['sign']);
+        return new static($data['type'], $data['identity'], $expiredAt, $data['nonce'], $data['sign']);
     }
 
     final public function __toString(): string

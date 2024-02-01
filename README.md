@@ -46,7 +46,7 @@ print_r($token);
 // MySecretToken Object
 // (
 //     [type:protected] => 1
-//     [userId] => 123456
+//     [identity] => 123456
 //     [expiredAt:protected] => DateTimeImmutable Object
 // (
 //     [date] => 2024-01-01 00:00:00.000000
