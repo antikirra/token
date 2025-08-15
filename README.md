@@ -20,41 +20,44 @@ use Antikirra\AbstractToken;
 
 require __DIR__ . '/vendor/autoload.php';
 
-class MySecretToken extends AbstractToken
+final class MySecretToken extends AbstractToken
 {
-    // if necessary, you can override the token type
-    // protected static function definedType(): int
-    // {
-    //     // token type in the range from 1 to 255
-    //     return 1;
-    // }
-
-    // salt definition is a prerequisite for declaring a child class
-    protected static function definedSalt(): string
+    protected static function type(): int
     {
-        // random string of arbitrary length
+        // token type in the range from 1 to 255
+        return 1;
+    }
+
+    protected static function salt(): string
+    {
         // !!! DO NOT MODIFY AFTER SETUP !!!
-        return '@5dCG!sZP%bF6e38K+xaa~R!2pp2r+b+r=9RXS+aYf?xT2Dc_Pp5@3k775fyH76P';
+        return '4Q8myx0n8mrdLs6ZdEvpp9ekV78nhn5P4ruf9Z96tu4ZEVlmWeGawymg3W0mkgPj';
+    }
+
+    protected static function algorithm(): string
+    {
+        // hash()
+        return 'xxh128';
     }
 }
 
 $token = MySecretToken::create(123456, new DateTimeImmutable('+1 day'));
 
-var_dump((string)$token); // AQBA4gEAAAAAAAcBvGXmTCS9BhCtddOfctGTZQLT_Be1EQ
+var_dump((string)$token); // AQBA4gEAAAAAAPDcoGguuFT3rMY17QZy-gmNOs1dIQWcR
 
 print_r($token);
-// MySecretToken Object
-// (
-//     [type:protected] => 1
-//     [identity] => 123456
-//     [expiredAt:protected] => DateTimeImmutable Object
-// (
-//     [date] => 2024-01-01 00:00:00.000000
-//             [timezone_type] => 3
-//             [timezone] => UTC
-//         )
+//MySecretToken Object
+//(
+//    [type:protected] => 1
+//    [identity:protected] => 123456
+//    [expiredAt:protected] => DateTimeImmutable Object
+//        (
+//            [date] => 2025-08-16 19:33:33.355526
+//            [timezone_type] => 3
+//            [timezone] => UTC
+//        )
 //
-//     [nonce:protected] => 4061102716
-//     [signature:protected] => <binary>
-// )
+//    [nonce:protected] => 2851849735
+//    [signature:protected] => <bynary>
+//)
 ```
