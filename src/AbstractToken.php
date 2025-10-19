@@ -172,4 +172,28 @@ abstract class AbstractToken
     {
         return $this->encode();
     }
+
+    final public function __serialize(): array
+    {
+        return ['token' => $this->encode()];
+    }
+
+    final public function __unserialize(array $data): void
+    {
+        if (!isset($data['token']) || !is_string($data['token'])) {
+            throw new RuntimeException('Invalid serialization data');
+        }
+
+        $decoded = static::decode($data['token']);
+
+        $this->type = $decoded->type;
+        $this->identity = $decoded->identity;
+        $this->expiredAt = $decoded->expiredAt;
+        $this->nonce = $decoded->nonce;
+        $this->signature = $decoded->signature;
+    }
+
+    private function __clone(): void
+    {
+    }
 }
