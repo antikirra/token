@@ -1,10 +1,10 @@
-# Abstract Token | Secure Cryptographically Signed Tokens
+# Token | Lightweight Cryptographically Signed Tokens for PHP
 
 ![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/antikirra/token/php)
 ![Packagist Version](https://img.shields.io/packagist/v/antikirra/token)
 ![Code Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
 
-**Secure, lightweight PHP library for creating cryptographically signed tokens with built-in expiration and validation.** Perfect for API authentication, session management, temporary access grants, and distributed systems requiring tamper-proof tokens without external dependencies.
+**Secure, lightweight PHP library for creating cryptographically signed tokens with built-in expiration and validation.** Supports any PHP hash algorithm for flexible performance and security trade-offs. Perfect for API authentication, session management, temporary access grants, and distributed systems requiring tamper-proof tokens without external dependencies.
 
 ## Install
 
@@ -12,7 +12,7 @@
 composer require antikirra/token:^1.0
 ```
 
-## Why Abstract Token?
+## Why Choose This Library?
 
 - 🔒 **Cryptographically Secure** - HMAC-based signatures prevent tampering and forgery
 - ⏰ **Built-in Expiration** - Native timestamp-based expiration with microsecond precision
