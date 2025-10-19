@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/antikirra/base64url.git",
-                "reference": "39a5d946e4a5fbdfdbc11085a0cd18368fb6094a"
+                "reference": "4f01d74a2c10d0c54a4ce6f038573f1ed1cc421d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antikirra/base64url/zipball/39a5d946e4a5fbdfdbc11085a0cd18368fb6094a",
-                "reference": "39a5d946e4a5fbdfdbc11085a0cd18368fb6094a",
+                "url": "https://api.github.com/repos/antikirra/base64url/zipball/4f01d74a2c10d0c54a4ce6f038573f1ed1cc421d",
+                "reference": "4f01d74a2c10d0c54a4ce6f038573f1ed1cc421d",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "issues": "https://github.com/antikirra/base64url/issues",
                 "source": "https://github.com/antikirra/base64url/tree/2.0.0"
             },
-            "time": "2024-01-31T09:18:46+00:00"
+            "time": "2024-02-12T14:21:32+00:00"
         }
     ],
     "packages-dev": [

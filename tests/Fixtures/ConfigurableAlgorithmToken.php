@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Fixtures;
+
+use Antikirra\AbstractToken;
+
+class ConfigurableAlgorithmToken extends AbstractToken
+{
+    private static string $testAlgorithm = 'sha256';
+
+    public static function setTestAlgorithm(string $algorithm): void
+    {
+        self::$testAlgorithm = $algorithm;
+    }
+
+    protected static function type(): int
+    {
+        return 1;
+    }
+
+    protected static function salt(): string
+    {
+        return 'test_salt_that_is_at_least_32_bytes_long_for_security';
+    }
+
+    protected static function algorithm(): string
+    {
+        return self::$testAlgorithm;
+    }
+}
