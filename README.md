@@ -1,4 +1,4 @@
-# Token | Lightweight Cryptographically Signed Tokens for PHP
+# Lightweight Cryptographically Signed Tokens for PHP
 
 ![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/antikirra/token/php)
 ![Packagist Version](https://img.shields.io/packagist/v/antikirra/token)
