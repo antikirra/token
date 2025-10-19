@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Antikirra\AbstractToken;
+use Antikirra\Token;
 
-class Md5AlgorithmToken extends AbstractToken
+class Md5AlgorithmToken extends Token
 {
     protected static function type(): int
     {

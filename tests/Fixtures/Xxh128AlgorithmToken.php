@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Antikirra\AbstractToken;
+use Antikirra\Token;
 
-class Xxh128AlgorithmToken extends AbstractToken
+class Xxh128AlgorithmToken extends Token
 {
     protected static function type(): int
     {

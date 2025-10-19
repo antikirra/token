@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use RuntimeException;
 
-abstract class AbstractToken
+abstract class Token
 {
     abstract protected static function type(): int;
 
@@ -28,20 +28,20 @@ abstract class AbstractToken
             throw new RuntimeException('salt cannot be less than 32 bytes');
         }
 
-        if (!in_array(static::algorithm(), hash_algos(), true)) {
-            throw new RuntimeException('algorithm is not supported');
-        }
-
         if ($type < 1 || $type > 255) {
             throw new RuntimeException('$type < 1 || $type > 255');
         }
 
-        if ($identity < 1 || $identity > 18446744073709551615) {
-            throw new RuntimeException('$identity < 1 || $identity > 18446744073709551615');
-        }
-
-        if ($nonce < 268435456 || $nonce > 4294967295) {
-            throw new RuntimeException('$nonce < 268435456 || $nonce > 4294967295');
+        // Validate identity boundaries
+        // For floats with precision issues, use string comparison
+        if (is_float($identity)) {
+            $identityStr = sprintf('%.0f', $identity);
+            $maxStr = (string)PHP_INT_MAX;
+            if ($identity < 1 || strcmp($identityStr, $maxStr) > 0) {
+                throw new RuntimeException('$identity < 1 || $identity > PHP_INT_MAX');
+            }
+        } else if ($identity < 1 || $identity > PHP_INT_MAX) {
+            throw new RuntimeException('$identity < 1 || $identity > PHP_INT_MAX');
         }
     }
 
@@ -65,7 +65,7 @@ abstract class AbstractToken
         return $this->expiredAt;
     }
 
-    final public static function create(int $identity, DateTimeInterface $expiredAt, ?int $type = null): static
+    final public static function create(int|float $identity, DateTimeInterface $expiredAt, ?int $type = null): static
     {
         $expiredAt = DateTimeImmutable::createFromInterface($expiredAt);
 
@@ -76,8 +76,12 @@ abstract class AbstractToken
         return new static($type, $identity, $expiredAt, $nonce, $sign);
     }
 
-    final protected static function sign(int $type, int $identity, int $expiredAt, int $nonce): string
+    final protected static function sign(int $type, int|float $identity, int $expiredAt, int $nonce): string
     {
+        if (!in_array(static::algorithm(), hash_algos(), true)) {
+            throw new \ValueError('algorithm is not supported');
+        }
+
         return hash(static::algorithm(), static::salt() . ">{$nonce}%{$expiredAt}#{$identity}%{$type}<", true);
     }
 
@@ -91,73 +95,32 @@ abstract class AbstractToken
 
     final public static function decode(string $raw): static
     {
-        $data = unpack('vtype/Pidentity/VexpiredAt/Vnonce/a*sign', base64url_decode($raw));
+        $decoded = base64url_decode($raw);
 
-        if (false === $data) {
-            throw new RuntimeException('false === $data');
+        if (empty($decoded)) {
+            throw new RuntimeException('base64url_decode failed');
         }
 
-        if (!is_array($data)) {
-            throw new RuntimeException('!is_array($data)');
+        // Minimum required bytes: v(2) + P(8) + V(4) + V(4) = 18 bytes
+        if (mb_strlen($decoded, '8bit') < 18) {
+            throw new RuntimeException('decoded data too short');
         }
 
-        if (!isset($data['type'])) {
-            throw new RuntimeException('!isset($data[\'type\'])');
-        }
-
-        if (!is_int($data['type'])) {
-            throw new RuntimeException('!is_int($data[\'type\'])');
-        }
+        $data = unpack('vtype/Pidentity/VexpiredAt/Vnonce/a*sign', $decoded);
 
         if ($data['type'] < 1 || $data['type'] > 255) {
             throw new RuntimeException('$data[\'type\'] < 1 || $data[\'type\'] > 255');
         }
 
-        if (!isset($data['identity'])) {
-            throw new RuntimeException('!isset($data[\'identity\'])');
-        }
-
-        if (!is_int($data['identity']) && !is_float($data['identity'])) {
-            throw new RuntimeException('!is_int($data[\'identity\']) && !is_float($data[\'identity\'])');
-        }
-
-        if ($data['identity'] < 1 || $data['identity'] > 18446744073709551615) {
-            throw new RuntimeException('$data[\'identity\'] < 1 || $data[\'identity\'] > 18446744073709551615');
-        }
-
-        if (!isset($data['expiredAt'])) {
-            throw new RuntimeException('!isset($data[\'expiredAt\'])');
-        }
-
-        if (!is_int($data['expiredAt'])) {
-            throw new RuntimeException('!is_int($data[\'expiredAt\'])');
-        }
-
-        if ($data['expiredAt'] < 0 || $data['expiredAt'] > 4294967295) {
-            throw new RuntimeException('$data[\'expiredAt\'] < 0 || $data[\'expiredAt\'] > 4294967295');
-        }
-
-        if (!isset($data['nonce'])) {
-            throw new RuntimeException('!isset($data[\'nonce\'])');
-        }
-
-        if (!is_int($data['nonce'])) {
-            throw new RuntimeException('!is_int($data[\'nonce\'])');
+        if ($data['identity'] < 1 || $data['identity'] > PHP_INT_MAX) {
+            throw new RuntimeException('$data[\'identity\'] < 1 || $data[\'identity\'] > PHP_INT_MAX');
         }
 
         if ($data['nonce'] < 268435456 || $data['nonce'] > 4294967295) {
             throw new RuntimeException('$data[\'nonce\'] < 268435456 || $data[\'nonce\'] > 4294967295');
         }
 
-        if (!isset($data['sign'])) {
-            throw new RuntimeException('!isset($data[\'sign\'])');
-        }
-
-        if (!is_string($data['sign'])) {
-            throw new RuntimeException('!is_string($data[\'sign\'])');
-        }
-
-        $sign = static::sign($data['type'], $data['identity'], $data['expiredAt'], $data['nonce']);
+        $sign = static::sign($data['type'], (int)$data['identity'], $data['expiredAt'], $data['nonce']);
 
         if (!hash_equals($sign, $data['sign'])) {
             throw new RuntimeException('!hash_equals($sign, $data[\'sign\'])');

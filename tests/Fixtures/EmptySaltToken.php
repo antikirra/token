@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Antikirra\AbstractToken;
+use Antikirra\Token;
 
-class EmptySaltToken extends AbstractToken
+class EmptySaltToken extends Token
 {
     protected static function type(): int
     {

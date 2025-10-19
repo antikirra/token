@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Antikirra\AbstractToken;
+use Antikirra\Token;
 
-class HighOverflowTypeToken extends AbstractToken
+class HighOverflowTypeToken extends Token
 {
     protected static function type(): int
     {

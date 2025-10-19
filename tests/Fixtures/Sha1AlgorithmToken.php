@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Antikirra\AbstractToken;
+use Antikirra\Token;
 
-class Sha1AlgorithmToken extends AbstractToken
+class Sha1AlgorithmToken extends Token
 {
     protected static function type(): int
     {

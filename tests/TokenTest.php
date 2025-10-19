@@ -69,11 +69,11 @@ test('can serialize and unserialize token', function () {
 
 test('throws exception for invalid identity min', function () {
     TestToken::create(0, $this->expiredAt);
-})->throws(RuntimeException::class, '$identity < 1 || $identity > 18446744073709551615');
+})->throws(RuntimeException::class, '$identity < 1 || $identity > PHP_INT_MAX');
 
 test('throws exception for invalid identity max', function () {
-    TestToken::create(18446744073709551616, $this->expiredAt);
-})->throws(TypeError::class);
+    TestToken::create(PHP_INT_MAX + 1, $this->expiredAt);
+})->throws(RuntimeException::class, '$identity < 1 || $identity > PHP_INT_MAX');
 
 test('throws exception for invalid type min', function () {
     TestToken::create($this->identity, $this->expiredAt, 0);
